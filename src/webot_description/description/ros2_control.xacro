@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<robot xmlns:xacro="http://www.ros.org/wiki/xacro">
+
+  <ros2_control name="GazeboSystem" type="system">
+    <hardware>
+      <!-- Updated for modern Gazebo (Ignition) in Jazzy -->
+      <plugin>gz_ros2_control/GazeboSimSystem</plugin>
+    </hardware>
+
+    <!-- Front Steering Joints -->
+    <joint name="FL_STEERING_JOINT">
+      <command_interface name="position">
+        <param name="min">-0.524</param>
+        <param name="max">0.524</param>
+      </command_interface>
+      <state_interface name="position"/>
+      <state_interface name="velocity"/>
+    </joint>
+
+    <joint name="FR_STEERING_JOINT">
+      <command_interface name="position">
+        <param name="min">-0.524</param>
+        <param name="max">0.524</param>
+      </command_interface>
+      <state_interface name="position"/>
+      <state_interface name="velocity"/>
+    </joint>
+
+    <!-- Rear Drive Wheels -->
+    <joint name="BL_WHEEL_JOINT">
+      <command_interface name="velocity">
+        <param name="min">-10</param>
+        <param name="max">10</param>
+      </command_interface>
+      <state_interface name="position"/>
+      <state_interface name="velocity"/>
+    </joint>
+
+    <joint name="BR_WHEEL_JOINT">
+      <command_interface name="velocity">
+        <param name="min">-10</param>
+        <param name="max">10</param>
+      </command_interface>
+      <state_interface name="position"/>
+      <state_interface name="velocity"/>
+    </joint>
+
+    <!-- Front Passive Wheels (For Joint State Broadcaster) -->
+    <joint name="FL_WHEEL_JOINT">
+      <state_interface name="position"/>
+      <state_interface name="velocity"/>
+    </joint>
+
+    <joint name="FR_WHEEL_JOINT">
+      <state_interface name="position"/>
+      <state_interface name="velocity"/>
+    </joint>
+
+  </ros2_control>
+
+</robot>
