@@ -8,18 +8,18 @@ class ControlNode(Node):
         
         # --- TUNED PARAMETERS ---
         self.target_width_ratio = 0.4  
-        self.linear_speed = 0.6        
+        self.linear_speed = 0.4       
         
         # Control Gains
         self.turn_kp = 0.0010   
-        self.turn_kd = 0.0025   
-        self.deadzone = 20.0    
+        self.turn_kd = 0.0050  
+        self.deadzone = 10.0    
         
         self.last_error_x = 0.0 
         
         # --- TOLERANCE ---
         self.missed_frames = 0
-        self.max_missed_frames = 15  
+        self.max_missed_frames = 20  
         self.last_steer_cmd = 0.0    
         
         self.sub = self.create_subscription(
@@ -46,7 +46,7 @@ class ControlNode(Node):
                 # Target Reached
                 cmd.twist.linear.x = 0.0
                 cmd.twist.angular.z = 0.0
-                self.get_logger().info("Target Reached! Stopping.", throttle_duration_sec=1.0)
+                self.get_logger().info("Target Reached Stopping.", throttle_duration_sec=1.0)
             else:
                 if abs(raw_error_x) < self.deadzone:
                     error_x = 0.0
@@ -63,7 +63,7 @@ class ControlNode(Node):
                 cmd.twist.angular.z = steering_angle 
                 
                 self.get_logger().info(
-                    f"Approaching... Error: {raw_error_x:.0f} | Steer: {steering_angle:.3f}", 
+                    f"Approaching Error: {raw_error_x:.0f} | Steer: {steering_angle:.3f}", 
                     throttle_duration_sec=0.5)
         else:
             self.missed_frames += 1
@@ -71,11 +71,11 @@ class ControlNode(Node):
             if self.missed_frames < self.max_missed_frames:
                 cmd.twist.linear.x = self.linear_speed * 0.7
                 cmd.twist.angular.z = self.last_steer_cmd
-                self.get_logger().info("Target lost... Coasting.", throttle_duration_sec=0.5)
+                self.get_logger().info("Target lost Coasting.", throttle_duration_sec=0.5)
             else:
                 self.last_error_x = 0.0 
-                cmd.twist.linear.x = 0.3
+                cmd.twist.linear.x = 0.15
                 cmd.twist.angular.z = 0.5 
-                self.get_logger().info("Searching for box...", throttle_duration_sec=1.0)
+                self.get_logger().info("Searching for box", throttle_duration_sec=1.0)
 
         self.pub.publish(cmd)
